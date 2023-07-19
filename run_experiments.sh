@@ -39,13 +39,11 @@ echo "Conda environment: $CONDA_ENV"
 # datasets=("cifar10" "mnist")
 datasets=("mnist")
 
-# learning_algorithms=("local" "central" "fedsgd" "fedavg" "fedakd")
+learning_algorithms=("central" "fedsgd" "fedavg" "fedakd")
 learning_algorithms=("central")
-# dp_types=("dp" "adv_cmp" "rdp")
-dp_types=("rdp")
-dp_epsilon_values=(100 1000 2000)
-# dp_epsilon_values=(0.1 1 10 100 1000 2000)
-learning_rates=(0.1)
+dp_types=("dp" "adv_cmp" "rdp")
+dp_epsilon_values=(0.1 1 10 100 1000 2000)
+learning_rates=(0.15)
 
 # private learning
 for dataset in "${datasets[@]}"; do
