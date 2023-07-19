@@ -39,8 +39,8 @@ echo "Conda environment: $CONDA_ENV"
 # datasets=("cifar10" "mnist")
 datasets=("mnist")
 
-learning_algorithms=("central" "fedsgd" "fedavg" "fedakd")
-learning_algorithms=("central")
+learning_algorithms=("central" "fedavg" "fedakd" "fedsgd")
+# learning_algorithms=("central")
 dp_types=("dp" "adv_cmp" "rdp")
 dp_epsilon_values=(0.1 1 10 100 1000 2000)
 learning_rates=(0.15)
