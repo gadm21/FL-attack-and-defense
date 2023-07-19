@@ -51,7 +51,7 @@ for dataset in "${datasets[@]}"; do
         for dp_type in "${dp_types[@]}"; do
             for dp_epsilon in "${dp_epsilon_values[@]}"; do
                 for learning_rate in "${learning_rates[@]}"; do
-                    python "$CODE_PATH" "$dataset" --learning_algorithm "$learning_algorithm" --use_dp --rounds 40 --local_epochs 1 --target_model='nn' --dp_epsilon $dp_epsilon --dp_type $dp_type --lr $learning_rate
+                    python "$CODE_PATH" "$dataset" --learning_algorithm "$learning_algorithm" --use_dp --rounds 20 --local_epochs 1 --target_model='nn' --dp_epsilon $dp_epsilon --dp_type $dp_type --lr $learning_rate
                 done
             done
         done
