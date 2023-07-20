@@ -140,8 +140,8 @@ if __name__ == "__main__" :
     parser.add_argument('--local_epochs', type = int, default=15, help='Number of epochs') # Optional epochs argument
     parser.add_argument('--lr', type = float, default=0.001, help='Learning rate') # Optional learning rate argument
 
-    parser.add_argument('--early_stop_patience', type = int, default=-1, help='Patience of Early stopping callback') # early stopping patience
-    parser.add_argument('--lr_reduction_patience', type = int, default=-1, help='Patience of lr reduction callback') # lr reduction patience
+    parser.add_argument('--early_stop_patience', type = int, default=10, help='Patience of Early stopping callback') # early stopping patience
+    parser.add_argument('--lr_reduction_patience', type = int, default=7, help='Patience of lr reduction callback') # lr reduction patience
     
     parser.add_argument('--target_model', default='nn', help='Specify the target model')  # Optional target_model argument
     parser.add_argument('--n_shadow', type = int, default=10, help='Number of shadow models')  # Optional num_clients argument
@@ -151,7 +151,7 @@ if __name__ == "__main__" :
     parser.add_argument('--use_dp', dest='use_dp', action='store_true')
     parser.add_argument('--dp_epsilon', type = float, default=0.5, help='Privacy budget')  # Optional target_model argument
     parser.add_argument('--dp_delta', type = float, default=1e-5, help='Privacy budget')  # Optional target_model argument
-    parser.add_argument('--dp_norm_clip', type = float, default=3, help='Privacy budget')  # Optional target_model argument
+    parser.add_argument('--dp_norm_clip', type = float, default=2, help='Privacy budget')  # Optional target_model argument
     parser.add_argument('--dp_type', type = str, default='dp', help='DP variation')  # Optional target_model argument
     
 
@@ -160,14 +160,21 @@ if __name__ == "__main__" :
     # Shokri_MIA(args) 
     # train_attack_model(args) 
 
-    experiment_id =  args.dataset + '_' + args.learning_algorithm + '_' + str(args.use_dp) + '_' + datetime.now().strftime("%d_%m_%Y_%H_%M_%S")
-    
-    print("Running experiment " + experiment_id) 
-    print("Arguments: " + str(args)) 
-    
-    run_experiment(experiment_id, args) 
 
-    print("Done experiment " + experiment_id )
+
+    dp_types = ['dp', 'adv_cmp', 'rdp']
+    dp_epsilons = [0.1, 1, 10, 100, 1000]
+    for dp_type in dp_types :
+        for ep in dp_epsilons :
+            experiment_id =  args.dataset + '_' + args.learning_algorithm + '_' + str(args.use_dp) + '_' + datetime.now().strftime("%d_%m_%Y_%H_%M_%S")
+            
+            print("Running experiment " + experiment_id) 
+            print("Arguments: " + str(args)) 
+            args.dp_epsilon = ep
+            args.dp_type = dp_type
+            run_experiment(experiment_id, args) 
+
+            print("Done experiment " + experiment_id )
 
 
 

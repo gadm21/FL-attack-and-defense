@@ -6,7 +6,7 @@ from datetime import datetime
 import os 
 from os.path import join
 import argparse 
-from keras import backend as K
+# from keras import backend as K
 import json
 
 import tensorflow as tf
@@ -17,7 +17,7 @@ from tensorflow.keras import layers
 import matplotlib.pyplot as plt
 
 from sklearn.model_selection import train_test_split
-from mia.estimators import ShadowModelBundle, AttackModelBundle, prepare_attack_data
+# from mia.estimators import ShadowModelBundle, AttackModelBundle, prepare_attack_data
 from sklearn.metrics import classification_report
 
 from sklearn.ensemble import AdaBoostClassifier
@@ -303,7 +303,7 @@ def train_keras_model(model, train_data, test_data = None, epochs = 1, batch_siz
         early_stopping = EarlyStopping(monitor='val_loss', patience=early_stop_patience, restore_best_weights=True)
         callbacks.append(early_stopping)
     if lr_reduction_patience is not None and lr_reduction_patience > 0 :
-        lr_reduction = ReduceLROnPlateau(monitor='val_loss', patience=lr_reduction_patience, verbose=1, factor=0.5, min_lr=0.000_01)
+        lr_reduction = ReduceLROnPlateau(monitor='val_loss', patience=lr_reduction_patience, verbose=1, factor=0.7, min_lr=0.000_01)
         callbacks.append(lr_reduction)
     if csv_logger_path is not None :
         csv_logger = CSVLogger(csv_logger_path)

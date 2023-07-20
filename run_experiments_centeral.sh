@@ -1,6 +1,6 @@
 
 
-#!/bin/bash 
+#!/bin/sh
 
 echo "Starting script" 
 if [ "$#" -lt 1 ]; then # exit if called with no arguments 
@@ -9,14 +9,14 @@ if [ "$#" -lt 1 ]; then # exit if called with no arguments
 fi 
 
 
-CONDA_ENV_DIR="/Users/gadmohamed/miniforge3/envs"
-CONDA_ENV="$CONDA_ENV_DIR/$1"
+# CONDA_ENV_DIR="/Users/gadmohamed/miniforge3/envs"
+CONDA_ENV="$1"
 
 CODE_PATH="src/main.py"
 
 
-source /opt/anaconda3/etc/profile.d/conda.sh
-conda init zsh
+# source /usr/bin/conda.sh
+# conda init zsh
 conda activate $CONDA_ENV 
 
 # REQUIREMENTS_FILE="src/requirements.txt"
@@ -34,6 +34,7 @@ echo "Code path: $CODE_PATH"
 
 echo "Conda environment: $CONDA_ENV"
 
+conda info --envs
 
 
 # datasets=("cifar10" "mnist")

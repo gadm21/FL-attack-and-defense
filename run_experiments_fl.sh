@@ -9,8 +9,8 @@ if [ "$#" -lt 1 ]; then # exit if called with no arguments
 fi 
 
 
-CONDA_ENV_DIR="/Users/gadmohamed/miniforge3/envs"
-CONDA_ENV="$CONDA_ENV_DIR/$1"
+# CONDA_ENV_DIR="/Users/gadmohamed/miniforge3/envs"
+CONDA_ENV="$1"
 
 CODE_PATH="src/main.py"
 
