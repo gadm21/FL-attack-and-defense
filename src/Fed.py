@@ -170,9 +170,9 @@ class FedAvg :
 
     def update_server_model(self, weights_agg) :
         self.server_model.set_weights(weights_agg)
-        self.server_model = compile_model(self.server_model, self.args)
    
     def test(self) :
+        self.server_model = compile_model(self.server_model, self.args)
         score = test_keras_model(self.server_model, self.test_data, verbose=0)
         self.losses.append(score[0])
         self.accs.append(score[1])
