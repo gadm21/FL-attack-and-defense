@@ -64,7 +64,7 @@ def run_experiment(id, args) :
 
         centralized_data, clients_data, external_data = split_data(train_data, args.num_clients, args.local_size)
         if args.learning_algorithm == 'fedavg' :
-            initial_model = create_model_based_on_data(args)
+            initial_model = create_model_based_on_data(args, compile_model=False)
             learning_algorithm = FedAvg(exp_path = experiment_dir,
                                          clients_data = clients_data,
                                           test_data = test_data, 
@@ -90,9 +90,6 @@ def run_experiment(id, args) :
                                         args = args)
 
         elif args.learning_algorithm == 'fedakd' : 
-            
-            
-            
             params = {
                 'temperature' : 0.7,
                 'aalpha' : 1000, 

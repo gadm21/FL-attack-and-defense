@@ -78,7 +78,7 @@ class FedSGD :
     def local_train(self, client_id, local_epochs) :
         weights0 = self.clients_models[client_id].get_weights()
         self.clients_models[client_id] = compile_model(self.clients_models[client_id], self.args)
-        train_keras_model(self.clients_models[client_id], self.clients_data[client_id], self.test_data, epochs=local_epochs, verbose=0)
+        train_keras_model(self.clients_models[client_id], self.clients_data[client_id], self.test_data, epochs=local_epochs, batch_size = self.args.batch_size, verbose=0)
         # delta = np.array(weights0) - np.array(self.clients_models[client_id].get_weights())
         delta = subtract_weights(weights0, self.clients_models[client_id].get_weights())
         return delta
@@ -159,7 +159,7 @@ class FedAvg :
         self.clients_models[client_id].set_weights(self.server_model.get_weights())
 
     def local_train(self, client_id, local_epochs) :
-        train_keras_model(self.clients_models[client_id], self.clients_data[client_id], self.test_data, epochs=local_epochs, verbose=0)
+        train_keras_model(self.clients_models[client_id], self.clients_data[client_id], self.test_data, epochs=local_epochs, batch_size = self.args.batch_size, verbose=0)
         return self.clients_models[client_id].get_weights()
     
     def aggregate(self, weights):
@@ -269,7 +269,7 @@ class FedProx :
         self.clients_models[client_id].set_weights(self.server_model.get_weights())
 
     def local_train(self, client_id, local_epochs) :
-        train_keras_model(self.clients_models[client_id], self.clients_data[client_id], self.test_data, epochs=local_epochs, verbose=0)
+        train_keras_model(self.clients_models[client_id], self.clients_data[client_id], self.test_data, epochs=local_epochs, batch_size = self.args.batch_size, verbose=0)
         return self.clients_models[client_id].get_weights()
     
     def aggregate(self, weights) :
@@ -401,7 +401,7 @@ class FedAKD:
         self.clients_models[client_id].set_weights(self.server_model.get_weights())
 
     def local_train(self, client_id, local_epochs):
-        train_keras_model(self.clients_models[client_id], self.clients_data[client_id], self.test_data, epochs=local_epochs, verbose=0)
+        train_keras_model(self.clients_models[client_id], self.clients_data[client_id], self.test_data, epochs=local_epochs, batch_size = self.args.batch_size, verbose=0)
         return self.clients_models[client_id].get_weights()
 
     def kd_train(self, client_id, proxy_data, soft_labels, epochs):
