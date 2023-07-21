@@ -59,11 +59,11 @@ class FedSGD :
                 delta_agg = new_subtract(self.server_model.get_weights(), delta_agg)
 
                 self.update_server_model(delta_agg)
-            if len(self.accs ) > 11: 
-                # check if accuracy is not improving
-                if np.mean(np.subtract(self.accs[-10:], self.accs[-11:-1])) < 0.01:
-                    print("Breaking the training loop as I am not improving anymore :(")
-                    break
+            # if len(self.accs ) > 11: 
+            #     # check if accuracy is not improving
+            #     if np.mean(np.subtract(self.accs[-10:], self.accs[-11:-1])) < 0.01:
+            #         print("Breaking the training loop as I am not improving anymore :(")
+            #         break
 
             
     
@@ -147,11 +147,11 @@ class FedAvg :
             self.update_server_model(weights_agg)
             loss, acc = self.test()
             print("FedAvg round {}, accuracy:{} ".format(r, acc))
-            if len(self.accs ) > 11: 
-                # check if accuracy is not improving
-                if np.mean(np.subtract(self.accs[-10:], self.accs[-11:-1])) < 0.01:
-                    print("Breaking the training loop as I am not improving anymore :(")
-                    break
+            # if len(self.accs ) > 11: 
+            #     # check if accuracy is not improving
+            #     if np.mean(np.subtract(self.accs[-10:], self.accs[-11:-1])) < 0.01:
+            #         print("Breaking the training loop as I am not improving anymore :(")
+            #         break
 
             
 
@@ -236,11 +236,11 @@ class FedProx :
             weights_agg = new_aggregate(weights)
             self.update_server_model(weights_agg)
             self.test()
-            if len(self.accs ) > 11: 
-                # check if accuracy is not improving
-                if np.mean(np.subtract(self.accs[-10:], self.accs[-11:-1])) < 0.01:
-                    print("Breaking the training loop as I am not improving anymore :(")
-                    break
+            # if len(self.accs ) > 11: 
+            #     # check if accuracy is not improving
+            #     if np.mean(np.subtract(self.accs[-10:], self.accs[-11:-1])) < 0.01:
+            #         print("Breaking the training loop as I am not improving anymore :(")
+            #         break
 
             
 
@@ -316,6 +316,7 @@ class FedAKD:
     def __init__(self, exp_path, clients_data, test_data, proxy_data, clients_model_fn, args):
         
         self.exp_path = exp_path
+        self.args = args
         self.clients_data = clients_data
         self.test_data = test_data
         self.proxy_data = proxy_data
@@ -379,11 +380,11 @@ class FedAKD:
             kd_acc = self.test()
             print("KD accuracy : ", kd_acc)
 
-            if len(self.accs ) > 11: 
-                # check if accuracy is not improving
-                if np.abs(np.sum(np.subtract(self.accs[-10:], self.accs[-11:-1]))) < 0.05:
-                    print("Breaking the training loop as I am not improving anymore :(")
-                    break
+            # if len(self.accs ) > 11: 
+            #     # check if accuracy is not improving
+            #     if np.abs(np.sum(np.subtract(self.accs[-10:], self.accs[-11:-1]))) < 0.05:
+            #         print("Breaking the training loop as I am not improving anymore :(")
+            #         break
 
 
 
