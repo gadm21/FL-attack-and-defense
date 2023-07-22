@@ -137,8 +137,8 @@ if __name__ == "__main__" :
     parser.add_argument('--local_epochs', type = int, default=15, help='Number of epochs') # Optional epochs argument
     parser.add_argument('--lr', type = float, default=0.001, help='Learning rate') # Optional learning rate argument
 
-    parser.add_argument('--early_stop_patience', type = int, default=10, help='Patience of Early stopping callback') # early stopping patience
-    parser.add_argument('--lr_reduction_patience', type = int, default=7, help='Patience of lr reduction callback') # lr reduction patience
+    parser.add_argument('--early_stop_patience', type = int, default=-1, help='Patience of Early stopping callback') # early stopping patience
+    parser.add_argument('--lr_reduction_patience', type = int, default=-1, help='Patience of lr reduction callback') # lr reduction patience
     
     parser.add_argument('--target_model', default='nn', help='Specify the target model')  # Optional target_model argument
     parser.add_argument('--n_shadow', type = int, default=10, help='Number of shadow models')  # Optional num_clients argument
