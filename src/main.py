@@ -169,21 +169,34 @@ if __name__ == "__main__" :
         learning_algorithms = ['central', 'local']
     else : 
         learning_algorithms = ['fedavg', 'fedakd']
-    dp_types = ['dp', 'adv_cmp', 'rdp']
-    dp_epsilons = [0.1, 1, 10, 100, 1000]
-    for dp_type in dp_types :
-        for ep in dp_epsilons :
-            for learning_algorithm in learning_algorithms : 
-                args.learning_algorithm = learning_algorithm
-                experiment_id =  args.dataset + '_' + args.learning_algorithm + '_' + str(args.use_dp) + '_' + datetime.now().strftime("%d_%m_%Y_%H_%M_%S")
-                
-                args.dp_epsilon = ep
-                args.dp_type = dp_type
-                print("Running experiment " + experiment_id) 
-                print("Arguments: " + str(args)) 
-                run_experiment(experiment_id, args) 
+        # learning_algorithms = ['fedsgd']
 
-                print("Done experiment " + experiment_id )
+    if not args.use_dp :
+        for learning_algorithm in learning_algorithms : 
+            args.learning_algorithm = learning_algorithm
+            experiment_id =  args.dataset + '_' + args.learning_algorithm + '_' + str(args.use_dp) + '_' + datetime.now().strftime("%d_%m_%Y_%H_%M_%S")
+            
+            print("Running experiment " + experiment_id) 
+            print("Arguments: " + str(args)) 
+            run_experiment(experiment_id, args) 
+
+            print("Done experiment " + experiment_id )
+    else : 
+        dp_types = ['dp', 'adv_cmp', 'rdp']
+        dp_epsilons = [0.1, 1, 10, 100, 1000]
+        for dp_type in dp_types :
+            for ep in dp_epsilons :
+                for learning_algorithm in learning_algorithms : 
+                    args.learning_algorithm = learning_algorithm
+                    experiment_id =  args.dataset + '_' + args.learning_algorithm + '_' + str(args.use_dp) + '_' + datetime.now().strftime("%d_%m_%Y_%H_%M_%S")
+                    
+                    args.dp_epsilon = ep
+                    args.dp_type = dp_type
+                    print("Running experiment " + experiment_id) 
+                    print("Arguments: " + str(args)) 
+                    run_experiment(experiment_id, args) 
+
+                    print("Done experiment " + experiment_id )
 
 
 
