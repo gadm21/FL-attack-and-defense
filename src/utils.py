@@ -125,9 +125,8 @@ def boston_data() :
 
 def split_data(source, num_clients, local_size, shuffle = True):   
     
-    if shuffle:
-        p = np.random.permutation(len(source[0]))
-        source = (source[0][p], source[1][p])
+    p = np.random.permutation(len(source[0]))
+    source = (source[0][p], source[1][p])
     
     client_data = []
     for s in range(num_clients):
@@ -138,7 +137,7 @@ def split_data(source, num_clients, local_size, shuffle = True):
     central_data = (np.array(source[0][:local_size*num_clients] , dtype=np.float32), source[1][:local_size*num_clients])
     external_data = (np.array(source[0][local_size*num_clients:] , dtype=np.float32), source[1][local_size*num_clients:]) 
     
-    return central_data, client_data, external_data
+    return central_data, client_data, external_data, p
 
 
 def split_data_non_iid(source, num_clients, alpha):
@@ -371,3 +370,18 @@ def compile_model(model, args, loss_fn = None) :
         )
     return model
 
+
+def model_stats(model, data, labels, loss_fn) : 
+    """a function that takes a model, data, and labels and returns the predictions and losses for the data
+
+    Args:
+        model (keras model): A keras model
+        data (np.array): data samples with the distributions (samples, input_shape)
+        labels (np.array): labels for the data samples (samples, num_classes)
+        loss_fn (keras loss function): loss function to be used for calculating the loss
+    """
+
+    predictions = model.predict(data)
+    loss = loss_fn(labels, predictions)
+
+    return predictions, loss

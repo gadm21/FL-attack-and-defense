@@ -37,6 +37,15 @@ class FedSGD :
         self.args = args
         self.clients_data = clients_data
         self.test_data = test_data
+    
+    
+        self.all_samples, self.all_labels = [], []
+        for c in range(len(clients_data)) :
+            self.all_samples.append(clients_data[c][0])
+            self.all_labels.append(clients_data[c][1])
+        self.all_samples = np.concatenate(self.all_samples, axis=0)
+        self.all_labels = np.concatenate(self.all_labels, axis=0)
+
         self.server_model = initial_model
         # clone initial model to all clients
         self.clients_models = []
@@ -59,6 +68,29 @@ class FedSGD :
                 delta_agg = new_subtract(self.server_model.get_weights(), delta_agg)
 
                 self.update_server_model(delta_agg)
+
+
+            if r+1 % 30 == 0 :
+                res_path = join(self.exp_path, 'epoch_' + str(r+1))
+                self.server_model = compile_model(self.server_model, self.args)
+                
+                loss_fnn = tf.keras.losses.CategoricalCrossentropy(reduction = 'none')
+                train_preds, train_losses = model_stats(self.server_model, self.all_samples, self.all_lables, loss_fnn)
+                test_preds, test_losses = model_stats(self.server_model, self.test_data[0], self.test_data[1], loss_fnn)
+
+                # save model 
+                model_path = join(res_path, 'model.h5')
+                self.server_model.save(model_path)
+
+                # save stats
+                train_preds_path = join(res_path, 'train_preds.npy')
+                train_losses_path = join(res_path, 'train_losses.npy')
+                test_preds_path = join(res_path, 'test_preds.npy')
+                test_losses_path = join(res_path, 'test_losses.npy')
+                np.save(train_preds_path, train_preds)
+                np.save(train_losses_path, train_losses)
+                np.save(test_preds_path, test_preds)
+                np.save(test_losses_path, test_losses)
             # if len(self.accs ) > 11: 
             #     # check if accuracy is not improving
             #     if np.mean(np.subtract(self.accs[-10:], self.accs[-11:-1])) < 0.01:
@@ -99,9 +131,11 @@ class FedSGD :
     def save_scores(self) : 
         acc_path = join(self.exp_path, 'accuracy' + '.npy')
         loss_path = join(self.exp_path, 'loss' + '.npy')
+        perm_path = join(self.exp_path, 'perm' + '.npy')
         np.save(acc_path, self.accs)
         np.save(loss_path, self.losses)
-    
+        np.save(perm_path, self.perm)
+
     def load_scores(self) :
         accuracy_path = join(self.exp_path, 'accuracy' + '.npy')
         loss_path = join(self.exp_path, 'loss' + '.npy')
@@ -129,6 +163,13 @@ class FedAvg :
         self.test_data = test_data
         self.server_model = initial_model
 
+        self.all_samples, self.all_labels = [], []
+        for c in range(len(clients_data)) :
+            self.all_samples.append(clients_data[c][0])
+            self.all_labels.append(clients_data[c][1])
+        self.all_samples = np.concatenate(self.all_samples, axis=0)
+        self.all_labels = np.concatenate(self.all_labels, axis=0)
+
         self.clients_models = []
         for c in range(len(clients_data) ) : 
             model = clone_model(initial_model)
@@ -146,6 +187,32 @@ class FedAvg :
             weights_agg = new_aggregate(weights)
             self.update_server_model(weights_agg)
             loss, acc = self.test()
+
+
+            if r+1 % 30 == 0 :
+                res_path = join(self.exp_path, 'epoch_' + str(r+1))
+                self.server_model = compile_model(self.server_model, self.args)
+                
+                loss_fnn = tf.keras.losses.CategoricalCrossentropy(reduction = 'none')
+                train_preds, train_losses = model_stats(self.server_model, self.all_samples, self.all_lables, loss_fnn)
+                test_preds, test_losses = model_stats(self.server_model, self.test_data[0], self.test_data[1], loss_fnn)
+
+                # save model 
+                model_path = join(res_path, 'model.h5')
+                self.server_model.save(model_path)
+
+                # save stats
+                train_preds_path = join(res_path, 'train_preds.npy')
+                train_losses_path = join(res_path, 'train_losses.npy')
+                test_preds_path = join(res_path, 'test_preds.npy')
+                test_losses_path = join(res_path, 'test_losses.npy')
+                np.save(train_preds_path, train_preds)
+                np.save(train_losses_path, train_losses)
+                np.save(test_preds_path, test_preds)
+                np.save(test_losses_path, test_losses)
+                np.save(test_losses_path, test_losses)
+
+
             print("FedAvg round {}, accuracy:{} ".format(r, acc))
             # if len(self.accs ) > 11: 
             #     # check if accuracy is not improving
@@ -179,11 +246,14 @@ class FedAvg :
         return score[0], score[1]
 
 
+
     def save_scores(self) : 
         acc_path = join(self.exp_path, 'accuracy' + '.npy')
         loss_path = join(self.exp_path, 'loss' + '.npy')
+        perm_path = join(self.exp_path, 'perm' + '.npy')
         np.save(acc_path, self.accs)
         np.save(loss_path, self.losses)
+        np.save(perm_path, self.perm)
     
     def load_scores(self) :
         accuracy_path = join(self.exp_path, 'accuracy' + '.npy')
@@ -208,6 +278,15 @@ class FedProx :
         self.args = args
         self.clients_data = clients_data
         self.test_data = test_data
+
+
+        self.all_samples, self.all_labels = [], []
+        for c in range(len(clients_data)) :
+            self.all_samples.append(clients_data[c][0])
+            self.all_labels.append(clients_data[c][1])
+        self.all_samples = np.concatenate(self.all_samples, axis=0)
+        self.all_labels = np.concatenate(self.all_labels, axis=0)
+
 
         self.server_model = initial_model
         self.server_model = compile_model(self.server_model, args)
@@ -236,6 +315,28 @@ class FedProx :
             weights_agg = new_aggregate(weights)
             self.update_server_model(weights_agg)
             self.test()
+
+            if r+1 % 30 == 0 :
+                res_path = join(self.exp_path, 'epoch_' + str(r+1))
+                self.server_model = compile_model(self.server_model, self.args, loss_fn = loss_fn)
+                
+                loss_fnn = tf.keras.losses.CategoricalCrossentropy(reduction = 'none')
+                train_preds, train_losses = model_stats(self.server_model, self.all_samples, self.all_lables, loss_fnn)
+                test_preds, test_losses = model_stats(self.server_model, self.test_data[0], self.test_data[1], loss_fnn)
+
+                # save model 
+                model_path = join(res_path, 'model.h5')
+                self.server_model.save(model_path)
+
+                # save stats
+                train_preds_path = join(res_path, 'train_preds.npy')
+                train_losses_path = join(res_path, 'train_losses.npy')
+                test_preds_path = join(res_path, 'test_preds.npy')
+                test_losses_path = join(res_path, 'test_losses.npy')
+                np.save(train_preds_path, train_preds)
+                np.save(train_losses_path, train_losses)
+                np.save(test_preds_path, test_preds)
+                np.save(test_losses_path, test_losses)
             # if len(self.accs ) > 11: 
             #     # check if accuracy is not improving
             #     if np.mean(np.subtract(self.accs[-10:], self.accs[-11:-1])) < 0.01:
@@ -292,8 +393,10 @@ class FedProx :
     def save_scores(self) : 
         acc_path = join(self.exp_path, 'accuracy' + '.npy')
         loss_path = join(self.exp_path, 'loss' + '.npy')
+        perm_path = join(self.exp_path, 'perm' + '.npy')
         np.save(acc_path, self.accs)
         np.save(loss_path, self.losses)
+        np.save(perm_path, self.perm)
     
     def load_scores(self) :
         accuracy_path = join(self.exp_path, 'accuracy' + '.npy')
@@ -320,7 +423,16 @@ class FedAKD:
         self.clients_data = clients_data
         self.test_data = test_data
         self.proxy_data = proxy_data
-                
+
+
+        self.all_samples, self.all_labels = [], []
+        for c in range(len(clients_data)) :
+            self.all_samples.append(clients_data[c][0])
+            self.all_labels.append(clients_data[c][1])
+        self.all_samples = np.concatenate(self.all_samples, axis=0)
+        self.all_labels = np.concatenate(self.all_labels, axis=0)
+
+
         self.temperature = args.temperature
         self.aalpha = args.aalpha # [0, inf)
         self.bbeta = args.bbeta  # (-inf, inf) seed
@@ -380,6 +492,28 @@ class FedAKD:
             kd_acc = self.test()
             print("KD accuracy : ", kd_acc)
 
+            if r+1 % 30 == 0 :
+                res_path = join(self.exp_path, 'epoch_' + str(r+1))
+                self.server_model = compile_model(self.server_model, self.args)
+                
+                loss_fnn = tf.keras.losses.CategoricalCrossentropy(reduction = 'none')
+                train_preds, train_losses = model_stats(self.server_model, self.all_samples, self.all_lables, loss_fnn)
+                test_preds, test_losses = model_stats(self.server_model, self.test_data[0], self.test_data[1], loss_fnn)
+
+                # save model 
+                model_path = join(res_path, 'model.h5')
+                self.server_model.save(model_path)
+
+                # save stats
+                train_preds_path = join(res_path, 'train_preds.npy')
+                train_losses_path = join(res_path, 'train_losses.npy')
+                test_preds_path = join(res_path, 'test_preds.npy')
+                test_losses_path = join(res_path, 'test_losses.npy')
+                np.save(train_preds_path, train_preds)
+                np.save(train_losses_path, train_losses)
+                np.save(test_preds_path, test_preds)
+                np.save(test_losses_path, test_losses)
+
             # if len(self.accs ) > 11: 
             #     # check if accuracy is not improving
             #     if np.abs(np.sum(np.subtract(self.accs[-10:], self.accs[-11:-1]))) < 0.05:
@@ -438,6 +572,8 @@ class FedAKD:
     def save_scores(self) : 
         acc_path = join(self.exp_path, 'accuracy' + '.npy')
         loss_path = join(self.exp_path, 'loss' + '.npy')
+        perm_path = join(self.exp_path, 'perm' + '.npy')
         np.save(acc_path, self.accs)
         np.save(loss_path, self.losses)
+        np.save(perm_path, self.perm)
     
