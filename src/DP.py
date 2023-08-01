@@ -102,7 +102,7 @@ class DPAccountant:
             if self.dp_type == 'rdp':
                 #rdp = compute_rdp(self.sampling_rate, sigma_high, self.steps, orders)
                 #eps_high, _, _ = get_privacy_spent(orders, rdp, target_delta=self.target_delta)
-                eps_high, _ = compute_dp_sgd_privacy_lib.compute_dp_sgd_privacy(self.data_size, self.batch_size, sigma_high, self.epochs, self.target_delta)
+                eps_high, _ = compute_dp_sgd_privacy_lib.compute_dp_sgd_privacy(self.data_size, min(self.data_size, self.batch_size), sigma_high, self.epochs, self.target_delta)
             else: # if self.dp_type == 'gdp'
                 mu = compute_gdp_mu(self.sampling_rate, sigma_high, self.steps)
                 eps_high, delta = get_gdp_privacy_spent(mu, target_delta=self.target_delta)
@@ -118,7 +118,7 @@ class DPAccountant:
             if self.dp_type == 'rdp':
                 #rdp = compute_rdp(self.sampling_rate, sigma, self.steps, orders)
                 #eps, _, _ = get_privacy_spent(orders, rdp, target_delta=self.target_delta)
-                eps, _ = compute_dp_sgd_privacy_lib.compute_dp_sgd_privacy(self.data_size, self.batch_size, sigma, self.epochs, self.target_delta)
+                eps, _ = compute_dp_sgd_privacy_lib.compute_dp_sgd_privacy(self.data_size, min(self.data_size, self.batch_size), sigma, self.epochs, self.target_delta)
             else: # if self.dp_type == 'gdp'
                 mu = compute_gdp_mu(self.sampling_rate, sigma, self.steps)
                 eps, delta = get_gdp_privacy_spent(mu, target_delta=self.target_delta)

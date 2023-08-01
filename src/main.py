@@ -204,7 +204,7 @@ def run_path1(args) :
 
 def run_path2(args) :
 
-    learning_algorithms = ['central', 'local', 'fedavg', 'fedakd', 'fedsgd']
+    learning_algorithms = ['fedavg', 'fedakd', 'fedsgd']
     datasets = ['cifar10']
     local_sizes = [14, 200, 2000]
     local_epochss = [1, 2, 5] 
